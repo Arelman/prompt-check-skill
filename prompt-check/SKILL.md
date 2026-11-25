@@ -23,17 +23,27 @@ clearly unequal.
 
 ## Step 0. Decide whether to run
 
-Skip silently, and just do the task, when any of these is true:
+**The principle:** a message is exempt when it only accepts, declines, chooses or continues something already
+on the table, and adds no new task, constraint or fact that would change the work. Ask what the message
+adds. If an agent that had read the conversation would have to guess nothing new, skip silently and just do
+the task. `references/skip-rules.md` has the full rules; in short, skip when any of these is true:
 
-- The message is a short reply or acknowledgement: "yes", "ok", "go on", "готово", "да, делай", "проверь".
-- It continues a plan the user already approved in this conversation, or answers your own question.
-- It is a slash command, or a one-line request that is already fully clear ("rename `foo` to `bar` in
-  utils.py").
-- The user waived questions in words: "no questions", "just do it", "без вопросов", "сразу делай".
-- Nobody can answer: you are a subagent, a scheduled or looped run, a message from another session or an
-  automated tool. In that case do not ask. Decide, and list what you assumed in one line at the end.
+- **Reply words.** The whole message is acknowledgement, agreement, refusal, continuation, thanks or a choice,
+  in any combination: "yes", "ok", "go on", "да, делай", "ага, давай", "👍", "2 и 3", "вариант Б",
+  "second one". The word lists are in `references/skip-rules.md`.
+- **Context.** Your last message asked a question or offered options, and the reply is short (up to about
+  fifteen words). Treat it as an answer even if its words are not on any list.
+- **Mixed message.** "Да, но без пуша": accept the part that accepts, honour the new constraint, and check
+  only what is genuinely new. Do not reopen the whole task.
+- **Already clear.** A one-line request that is fully specified ("rename `foo` to `bar` in utils.py").
+  Short is not the same as clear: "fix the button and publish" is short and needs a check.
+- **Slash command, or questions waived in words:** "no questions", "just do it", "без вопросов",
+  "сразу делай".
+- **Nobody can answer:** you are a subagent, a scheduled or looped run, a message from another session or an
+  automated tool. Do not ask. Decide, and list what you assumed in one line at the end.
 
-Otherwise continue. Do not announce that you are running the check.
+In doubt after that: skip if the work is easy to undo, ask one question if it is not (publishing, deleting,
+sending, spending). Otherwise continue. Do not announce that you are running the check.
 
 ## Step 1. Read the request and find the mode
 
@@ -132,6 +142,7 @@ format at the end of `references/examples.md`.
 
 | Need | File |
 |---|---|
+| When to skip: reply word lists, context rule, principle | `references/skip-rules.md` |
 | Every check, why it matters, source, question template | `references/checklist.md` |
 | Questions and defaults by task type | `references/question-bank.md` |
 | Short digest of the underlying guidance, model-specific notes | `references/principles.md` |

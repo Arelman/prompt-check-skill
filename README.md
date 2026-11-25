@@ -10,8 +10,11 @@ result is missing. If nothing is missing, it stays out of the way.
 
 When you send a request, the skill:
 
-1. **Skips** trivial replies, slash commands, already-clear one-liners, runs where nobody can answer, and
-   anything you wave through with "no questions" or "just do it".
+1. **Skips** messages that only accept, decline, choose or continue something already on the table: reply
+   words ("ok", "да, давай", "2 и 3", "👍"), short answers to its own questions, slash commands, already-clear
+   one-liners, runs where nobody can answer, and anything you wave through with "no questions" or "just do
+   it". Short is not the same as clear: "fix the button and publish" still gets checked. The rules are in
+   [`skip-rules.md`](prompt-check/references/skip-rules.md).
 2. **Finds the mode:** explore, propose, or do. Loose requests are fine when exploring; gaps are costly when doing.
 3. **Checks five things:** how to tell the work is done, scope and approvals, the goal and its reason, context
    that cannot be found in the files, and output format and reader.
@@ -44,6 +47,7 @@ reminder on every substantive prompt, add the small hook in
 | Path | Purpose |
 |---|---|
 | `prompt-check/SKILL.md` | The workflow Claude follows |
+| `prompt-check/references/skip-rules.md` | When to skip: reply word lists, context rule, principle |
 | `prompt-check/references/checklist.md` | Every check, why it matters, source, question templates |
 | `prompt-check/references/question-bank.md` | Questions with defaults by task type |
 | `prompt-check/references/principles.md` | Paraphrased digest of the guidance, with model notes |
@@ -81,8 +85,11 @@ MIT, see [LICENSE](LICENSE).
 
 ## Что делает
 
-1. **Пропускает** короткие ответы («да», «готово»), слэш-команды, уже ясные запросы в одну строку, запуски без
-   человека и всё, что вы пускаете без вопросов фразой «без вопросов» или «сразу делай».
+1. **Пропускает** сообщения, которые только соглашаются, отказываются, выбирают или продолжают уже начатое:
+   слова-ответы («ок», «да, давай», «2 и 3», «👍»), короткие ответы на его же вопросы, слэш-команды, уже ясные
+   запросы в одну строку, запуски без человека и всё, что вы пускаете фразой «без вопросов» или «сразу делай».
+   Короткое не значит ясное: «почини кнопку и выложи» всё равно проверяется. Правила в
+   [`skip-rules.md`](prompt-check/references/skip-rules.md).
 2. **Определяет режим:** исследовать, предложить или сделать.
 3. **Проверяет пять вещей:** как понять, что готово; границы и согласования; цель и причина; контекст, которого
    нет в файлах; формат ответа и читатель.

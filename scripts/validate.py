@@ -64,21 +64,60 @@ for c in cases:
 
 # 5. Hook behaviour
 hook = os.path.join(root, "hooks", "prompt-check-hook.py")
-def run(prompt):
-    r = subprocess.run([sys.executable, hook], input=json.dumps({"prompt": prompt}), capture_output=True, text=True)
+import tempfile
+
+def run(prompt, transcript=None):
+    payload = {"prompt": prompt}
+    if transcript:
+        payload["transcript_path"] = transcript
+    r = subprocess.run([sys.executable, hook], input=json.dumps(payload), capture_output=True, text=True)
     return r.returncode, r.stdout.strip()
+
+def transcript_with(assistant_text):
+    f = tempfile.NamedTemporaryFile("w", suffix=".jsonl", delete=False, encoding="utf-8")
+    f.write(json.dumps({"type": "user", "message": {"role": "user", "content": "earlier"}}) + "\n")
+    f.write(json.dumps({"type": "assistant", "message": {"role": "assistant",
+            "content": [{"type": "text", "text": assistant_text}]}}) + "\n")
+    f.close()
+    return f.name
+
+asked = transcript_with("I can do the footer or the header first. Which should I do first?")
+stated = transcript_with("Done. The footer links are fixed and the tests pass.")
+offered = transcript_with("Two options:\n1. Rewrite the page\n2. Patch it\nAnswer ok to take my default (option 2).")
+
+# (prompt, transcript, should the hook fire?)
 expect = [
-    ("Fix the login page so it works on phones and push it to main", True),
-    ("Исправь стрелку у кнопки «Заполнить бриф» и выложи на боевой сайт", True),
-    ("ok", False), ("да, делай", False), ("/ship", False),
-    ("just do it however you think best, this is a long enough message to pass the length gate", False),
-    ("без вопросов: перепиши этот абзац покороче, он слишком длинный для слайда", False),
-    ("This session is being continued from a previous conversation that ran out of context. " * 2, False),
+    # new work: fires
+    ("Fix the login page so it works on phones and push it to main", None, True),
+    ("Исправь стрелку у кнопки «Заполнить бриф» и выложи на боевой сайт", None, True),
+    ("fix the button and publish it", None, True),            # short but vague: still checked
+    ("почини кнопку и выложи", None, True),
+    ("да, но ещё добавь тёмную тему и выложи", None, True),    # acceptance plus a new task
+    # layer 1: reply words, choices, emoji
+    ("ok", None, False), ("да, делай", None, False), ("ага, давай", None, False), ("Да!", None, False),
+    ("👍", None, False), ("2 и 3", None, False), ("вариант Б", None, False), ("ну ок, спасибо", None, False),
+    ("sure, go ahead", None, False), ("option 2 please", None, False), ("первый и последний", None, False),
+    ("thanks, sounds good", None, False), ("both", None, False),
+    # slash, waiver, automation
+    ("/ship", None, False),
+    ("just do it however you think best, this is a long enough message to pass the length gate", None, False),
+    ("без вопросов: перепиши этот абзац покороче, он слишком длинный для слайда", None, False),
+    ("This session is being continued from a previous conversation that ran out of context. " * 2, None, False),
+    # layer 2: context
+    ("the footer, and keep the colours as they are", asked, False),
+    ("the footer, and keep the colours as they are", stated, True),   # nothing was asked: not a reply
+    ("go with option 2 but skip the tests", offered, False),
+    ("the footer, and keep the colours as they are " * 8, asked, True),  # too long to be a reply
 ]
-for prompt, fires in expect:
-    rc, out = run(prompt)
+for prompt, tr, fires in expect:
+    rc, out = run(prompt, tr)
     good = rc == 0 and (bool(out) == fires) and (not out or "additionalContext" in json.loads(out)["hookSpecificOutput"])
-    (ok if good else bad)(f"hook {'fires' if fires else 'is silent'}: {prompt[:50]!r}")
+    tag = " [context]" if tr else ""
+    (ok if good else bad)(f"hook {'fires' if fires else 'is silent'}{tag}: {prompt[:48]!r}")
+for p in (asked, stated, offered):
+    os.unlink(p)
+rc, out = run("the footer please, and keep the colours", "/nonexistent/transcript.jsonl")
+(ok if rc == 0 and out else bad)("hook survives a missing transcript and still fires")
 rc, out = subprocess.run([sys.executable, hook], input="not json", capture_output=True, text=True).returncode, ""
 (ok if rc == 0 else bad)("hook exits 0 on malformed input")
 

@@ -2,8 +2,11 @@
 
 A skill is chosen by the model from its description, so it can occasionally be skipped. If you want the check
 to be applied to every substantive prompt, add a `UserPromptSubmit` hook. The hook does not ask anything
-itself; it adds a short reminder to Claude's context, and only for prompts that deserve it (not for short
-replies, slash commands, "no questions" requests, or automated turns).
+itself; it adds a short reminder to Claude's context, and only for prompts that deserve it. It stays silent for
+reply words and choices ("ok", "да, давай", "2 и 3"), for short replies to a question or offer in the assistant's
+last message (it reads `transcript_path` for this and falls back to a reminder if the file cannot be read),
+for very short messages, slash commands, "no questions" requests and automated turns. The rules are in
+`../references/skip-rules.md`.
 
 Cost: a few lines of context on each substantive prompt, and a few milliseconds of local script time.
 
