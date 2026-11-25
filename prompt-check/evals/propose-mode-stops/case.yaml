@@ -1,0 +1,5 @@
+schema_version: "1.1"
+name: propose-mode-stops
+expected_outcome: |
+  The reply gives two directions, each with a downside, asks no done-criterion question, and stops
+  without editing files.

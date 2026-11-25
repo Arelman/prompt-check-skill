@@ -1,0 +1,5 @@
+schema_version: "1.1"
+name: skips-acknowledgement
+expected_outcome: |
+  The reply continues the work without any clarifying question. The check does not run on a plain
+  acknowledgement.

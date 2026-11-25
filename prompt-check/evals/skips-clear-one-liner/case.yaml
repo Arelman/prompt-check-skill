@@ -1,0 +1,4 @@
+schema_version: "1.1"
+name: skips-clear-one-liner
+expected_outcome: |
+  The request is fully specified, so the reply proceeds with the task and does not ask questions.

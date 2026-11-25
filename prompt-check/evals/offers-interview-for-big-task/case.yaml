@@ -1,0 +1,5 @@
+schema_version: "1.1"
+name: offers-interview-for-big-task
+expected_outcome: |
+  The reply recognises the task as large and fuzzy and offers a short interview in rounds, ending in a
+  written SPEC.md that the user approves before anything is built. It changes nothing yet.

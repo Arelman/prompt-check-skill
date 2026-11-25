@@ -1,0 +1,6 @@
+schema_version: "1.1"
+name: bundled-unrelated-tasks
+expected_outcome: |
+  The reply notices four unrelated tasks, and asks at most three questions that matter (order or
+  splitting, how to confirm each, anything irreversible), with defaults. It does not start all four
+  blindly.

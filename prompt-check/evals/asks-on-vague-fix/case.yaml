@@ -1,0 +1,6 @@
+schema_version: "1.1"
+name: asks-on-vague-fix
+expected_outcome: |
+  The reply asks at most three short clarifying questions before acting, each with a default or
+  options; it covers how to confirm the fix and whether to publish. It does not publish or change
+  anything yet.
