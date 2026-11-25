@@ -1,10 +1,25 @@
 # prompt-check
 
-An Agent Skill for Claude Code (and other tools that read `SKILL.md`) that checks each substantive request
-against published prompting guidance and asks a few short questions when something that would change the
-result is missing. If nothing is missing, it stays out of the way.
+An Agent Skill (`SKILL.md`) for Claude Code and other tools that read skills. It checks each substantive
+request against Anthropic's prompt engineering best practices and MIT Sloan's prompting guidance, and asks a
+few short questions when the goal, scope or done-criterion is missing. If nothing is missing, it stays out of
+the way.
 
 Русская версия ниже.
+
+## What it is built from
+
+The skill is written from published guidance, paraphrased and linked, not from private data or user prompts:
+
+- **Anthropic:** Prompting best practices, the prompt engineering overview and blog, "Define success
+  criteria", the Claude Code best-practices page, the posts on context engineering, building effective agents
+  and harness design, and the model-specific prompting pages (Sonnet 5.5, Opus 5.5, Fable 5.2 and others).
+- **MIT Sloan:** "Effective Prompts for AI: The Essentials", the study on how user prompts affect results as
+  much as models, and the prompt-templates article.
+
+[`sources.md`](prompt-check/references/sources.md) lists every source with its URL, how much of each page was
+actually read, and retrieval dates. Some pages were read only in part, and the file says which. The skill is an
+independent project, not produced, endorsed or reviewed by Anthropic or MIT.
 
 ## What it does
 
@@ -56,13 +71,6 @@ reminder on every substantive prompt, add the small hook in
 | `prompt-check/hooks/` | Optional `UserPromptSubmit` hook |
 | `prompt-check/evals/` | Eight test cases (four should ask, four should not) |
 
-## Based on
-
-Anthropic's prompting best practices, its blog on prompt engineering, the Claude Code best-practices page, the
-success-criteria and harness-design posts and the model-specific prompting pages, plus MIT Sloan's prompting
-guide, study and templates. Everything is paraphrased and linked; see
-[`sources.md`](prompt-check/references/sources.md), which also says how much of each page was read.
-
 ## Limits, stated plainly
 
 - The skill is guidance for a model, not a program. How strictly a given model follows it varies.
@@ -79,9 +87,23 @@ MIT, see [LICENSE](LICENSE).
 
 # prompt-check (по-русски)
 
-Навык (Agent Skill) для Claude Code и других инструментов, читающих `SKILL.md`. Он проверяет каждый
-содержательный запрос по опубликованным методикам промптинга и задаёт несколько коротких вопросов, если не
-хватает того, что изменит результат. Если всё нужное есть, навык молчит.
+Навык (Agent Skill, `SKILL.md`) для Claude Code и других инструментов, читающих навыки. Он проверяет каждый
+содержательный запрос по руководствам Anthropic (prompt engineering) и MIT Sloan и задаёт несколько коротких
+вопросов, если не хватает цели, границ или критерия готовности. Если всё нужное есть, навык молчит.
+
+## На чём основан
+
+Навык написан по опубликованным руководствам, в пересказе и со ссылками, без личных данных и чужих запросов:
+
+- **Anthropic:** Prompting best practices, обзор и блог про prompt engineering, «Define success criteria»,
+  best practices для Claude Code, статьи про контекст-инжиниринг, эффективных агентов и дизайн харнесса,
+  страницы по конкретным моделям (Sonnet 5.5, Opus 5.5, Fable 5.2 и другие).
+- **MIT Sloan:** «Effective Prompts for AI: The Essentials», исследование о том, как запросы пользователей
+  влияют на результат наравне с моделью, и статья про шаблоны промптов.
+
+В [`sources.md`](prompt-check/references/sources.md) каждый источник со ссылкой, степенью прочтения и датой.
+Часть страниц прочитана не целиком, и файл говорит какая. Проект независимый, Anthropic и MIT его не
+выпускали и не одобряли.
 
 ## Что делает
 
